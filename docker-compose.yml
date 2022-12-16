@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: temporal
       POSTGRES_USER: temporal
     ports:
-      - 5432:5432
+      - 5434:5432
 
   temporal:
     container_name: temporal
@@ -48,10 +48,13 @@ services:
 
   app:
     build: .
-#    volumes:
-#      - ./app:/var/app
+    volumes:
+      - './app:/var/app'
     depends_on:
       - temporal
     environment:
       - "TEMPORAL_CLI_ADDRESS=temporal:7233"
     command: [ "/usr/local/bin/wait-for-temporal.sh", "temporal", "/usr/local/bin/rr", "serve", "-c", "/var/app/.rr.yaml" ]
+
+volumes:
+  app:

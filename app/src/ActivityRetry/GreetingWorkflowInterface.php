@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Temporal\Samples\ActivityRetry;
 
+use Generator;
 use Temporal\Workflow\WorkflowInterface;
 use Temporal\Workflow\WorkflowMethod;
 
@@ -19,10 +20,10 @@ interface GreetingWorkflowInterface
 {
     /**
      * @param string $name
-     * @return string
+     * @return Generator<string>
      */
     #[WorkflowMethod(name: "ActivityRetry.greet")]
     public function greet(
         string $name
-    );
+    ): Generator;
 }
