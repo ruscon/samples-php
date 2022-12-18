@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Temporal package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Temporal\Samples\Bifrost;
@@ -15,6 +8,7 @@ use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
+use Temporal\Samples\Bifrost\Enums\QueueNameEnum;
 use Temporal\Workflow;
 
 class FetchWorkflow implements FetchWorkflowInterface
@@ -26,12 +20,10 @@ class FetchWorkflow implements FetchWorkflowInterface
 
     public function __construct()
     {
-        /**
-         * To enable activity retry set {@link RetryOptions} on {@link ActivityOptions}.
-         */
         $this->fetchActivity = Workflow::newActivityStub(
             FetchActivityInterface::class,
             ActivityOptions::new()
+//                ->withTaskQueue(QueueNameEnum::HighPriority)
                 ->withScheduleToStartTimeout(CarbonInterval::hours(1))
                 ->withStartToCloseTimeout(CarbonInterval::seconds(10))
 //                ->withHeartbeatTimeout(CarbonInterval::seconds(5))

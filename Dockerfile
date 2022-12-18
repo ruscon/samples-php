@@ -1,6 +1,10 @@
 FROM php:8.0.15-cli
 
+ENV DEBIAN_FRONTEND noninteractive
+ENV DEBCONF_NOWARNINGS="yes"
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
+  apt-utils \
   nano \
   bash \
   libzip-dev \

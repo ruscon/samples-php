@@ -1,12 +1,5 @@
 <?php
 
-/**
- * This file is part of Temporal package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace Temporal\Samples\Bifrost;
@@ -20,6 +13,7 @@ use Temporal\Common\IdReusePolicy;
 use Temporal\Exception\Client\WorkflowExecutionAlreadyStartedException;
 use Temporal\Exception\Client\WorkflowFailedException;
 use Temporal\Exception\Failure\CanceledFailure;
+use Temporal\Samples\Bifrost\Enums\QueueNameEnum;
 use Temporal\SampleUtils\Command;
 
 class FetchCommand extends Command
@@ -37,6 +31,7 @@ class FetchCommand extends Command
         $workflow = $this->workflowClient->newWorkflowStub(
             FetchWorkflowInterface::class,
             WorkflowOptions::new()
+                ->withTaskQueue(QueueNameEnum::HighPriority)
 //                ->withWorkflowExecutionTimeout(CarbonInterval::seconds(10))
                 ->withWorkflowIdReusePolicy(IdReusePolicy::POLICY_ALLOW_DUPLICATE)
                 ->withWorkflowId($this->generateWorkflowId($userUuid))
