@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install PHP Extensions
 ENV CFLAGS="$CFLAGS -D_GNU_SOURCE"
 RUN docker-php-ext-install zip \
-  && docker-php-ext-install opcache sockets mbstring \
-  && docker-php-ext-enable opcache sockets mbstring
+  && docker-php-ext-install opcache sockets mbstring pcntl \
+  && docker-php-ext-enable opcache sockets mbstring pcntl
 
 # Protobuf and GRPC
 ENV PROTOBUF_VERSION "3.19.2"

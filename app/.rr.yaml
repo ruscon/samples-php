@@ -9,8 +9,27 @@ server:
 temporal:
   address: "temporal:7233"
   activities:
-    num_workers: 4
+    num_workers: 10
 
 logs:
   level: debug
   mode: development
+
+# https://roadrunner.dev/docs/plugins-reload/2.x/en
+reload:
+  # sync interval
+  interval: 1s
+  # global patterns to sync
+  patterns: [ ".php" ]
+  # list of included for sync services
+  services:
+    http:
+      # recursive search for file patterns to add
+      recursive: true
+      # ignored folders
+      ignore: [ "vendor" ]
+      # service specific file pattens to sync
+      patterns: [ ".php", ".go", ".md" ]
+      # directories to sync. If recursive is set to true,
+      # recursive sync will be applied only to the directories in `dirs` section
+      dirs: [ "." ]
