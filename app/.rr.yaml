@@ -4,7 +4,7 @@ rpc:
   listen: tcp://127.0.0.1:6001
 
 server:
-  command: "php ./src/Bifrost/worker.php"
+  command: "php ./worker.php"
 
 temporal:
   address: "temporal:7233"

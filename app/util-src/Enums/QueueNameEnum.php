@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Temporal\Samples\Bifrost\Enums;
+namespace Temporal\SampleUtils\Enums;
 abstract class QueueNameEnum
 {
     const LowPriority = 'low_priority';

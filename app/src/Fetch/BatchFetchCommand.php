@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Temporal\Samples\Bifrost;
+namespace Temporal\Samples\Fetch;
 
 use Carbon\CarbonInterval;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,13 +10,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Temporal\Client\WorkflowOptions;
 use Temporal\Common\IdReusePolicy;
 use Temporal\Exception\Client\WorkflowExecutionAlreadyStartedException;
-use Temporal\Samples\Bifrost\Enums\QueueNameEnum;
 use Temporal\SampleUtils\Command;
+use Temporal\SampleUtils\Enums\QueueNameEnum;
 
 class BatchFetchCommand extends Command
 {
-    protected const NAME = 'bifrost-batch-fetch';
-    protected const DESCRIPTION = 'Execute Bifrost\Fetch';
+    protected const NAME = 'fetch:batch';
+    protected const DESCRIPTION = 'Execute Fetch\Fetch';
+
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $userUuid = 0;
@@ -27,7 +28,7 @@ class BatchFetchCommand extends Command
         return self::SUCCESS;
     }
 
-    private function fetch(OutputInterface $output, string $userUuid) {
+    private function fetch(OutputInterface $output, string $userUuid): void {
         $workflow = $this->workflowClient->newWorkflowStub(
             FetchWorkflowInterface::class,
             WorkflowOptions::new()
@@ -43,7 +44,7 @@ class BatchFetchCommand extends Command
             $run = $this->workflowClient->start($workflow, $userUuid);
         } catch (WorkflowExecutionAlreadyStartedException $e) {
             $output->writeln('<fg=red>Already running</fg=red>');
-            return self::SUCCESS;
+            return;
         }
 
         $output->writeln(

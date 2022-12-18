@@ -10,6 +10,8 @@
 declare(strict_types=1);
 
 use Temporal\SampleUtils\DeclarationLocator;
+use Temporal\SampleUtils\Enums\QueueNameEnum;
+use Temporal\Worker\WorkerOptions;
 use Temporal\WorkerFactory;
 use Temporal\Samples\FileProcessing;
 
@@ -22,17 +24,24 @@ $declarations = DeclarationLocator::create(__DIR__ . '/src/');
 // factory initiates and runs task queue specific activity and workflow workers
 $factory = WorkerFactory::create();
 
-// Worker that listens on a task queue and hosts both workflow and activity implementations.
-$worker = $factory->newWorker();
+foreach ([QueueNameEnum::Default, QueueNameEnum::HighPriority] as $queueName) {
+    $workerOptions = match ($queueName) {
+        QueueNameEnum::Default => WorkerOptions::new()->withMaxConcurrentActivityExecutionSize(2),
+        default => WorkerOptions::new(),
+    };
 
-foreach ($declarations->getWorkflowTypes() as $workflowType) {
-    // Workflows are stateful. So you need a type to create instances.
-    $worker->registerWorkflowTypes($workflowType);
-}
+    // Worker that listens on a task queue and hosts both workflow and activity implementations.
+    $worker = $factory->newWorker($queueName, $workerOptions);
 
-foreach ($declarations->getActivityTypes() as $activityType) {
-    // Activities are stateless and thread safe. So a shared instance is used.
-    $worker->registerActivity($activityType);
+    foreach ($declarations->getWorkflowTypes() as $workflowType) {
+        // Workflows are stateful. So you need a type to create instances.
+        $worker->registerWorkflowTypes($workflowType);
+    }
+
+    foreach ($declarations->getActivityTypes() as $activityType) {
+        // Activities are stateless and thread safe. So a shared instance is used.
+        $worker->registerActivity($activityType);
+    }
 }
 
 // We can use task queue for more complex task routing, for example our FileProcessing
@@ -43,5 +52,6 @@ $hostTaskQueue = gethostname();
 $factory->newWorker($hostTaskQueue)
     ->registerActivityImplementations(new FileProcessing\StoreActivity($hostTaskQueue));
 
-// start primary loop
+
 $factory->run();
+

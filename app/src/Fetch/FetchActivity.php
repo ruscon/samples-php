@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Temporal\Samples\Bifrost;
+namespace Temporal\Samples\Fetch;
 
 use Psr\Log\LoggerInterface;
+use Temporal\Activity;
 use Temporal\SampleUtils\Logger;
 
 class FetchActivity implements FetchActivityInterface

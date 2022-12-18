@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Temporal\Samples\Bifrost;
+namespace Temporal\Samples\Fetch;
 
 use Carbon\CarbonInterval;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,10 +16,10 @@ use Temporal\Exception\Client\ServiceClientException;
 use Temporal\Exception\Client\WorkflowNotFoundException;
 use Temporal\SampleUtils\Command;
 
-class CancelFetchCommand extends FetchCommand
+class CancelFetchOneCommand extends FetchOneCommand
 {
-    protected const NAME = 'bifrost-fetch:cancel';
-    protected const DESCRIPTION = 'Execute Bifrost\Fetch cancellation by user uuid';
+    protected const NAME = 'fetch:one:cancel';
+    protected const DESCRIPTION = 'Execute Fetch\Fetch cancellation by user uuid';
 
     protected const ARGUMENTS = [
         ['user', InputArgument::REQUIRED, 'User uuid'],

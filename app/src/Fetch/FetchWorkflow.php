@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Temporal\Samples\Bifrost;
+namespace Temporal\Samples\Fetch;
 
 use Carbon\CarbonInterval;
+use Temporal\Activity\ActivityCancellationType;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
-use Temporal\Samples\Bifrost\Enums\QueueNameEnum;
+use Temporal\SampleUtils\Enums\QueueNameEnum;
 use Temporal\Workflow;
 
 class FetchWorkflow implements FetchWorkflowInterface
@@ -23,7 +24,6 @@ class FetchWorkflow implements FetchWorkflowInterface
         $this->fetchActivity = Workflow::newActivityStub(
             FetchActivityInterface::class,
             ActivityOptions::new()
-//                ->withTaskQueue(QueueNameEnum::HighPriority)
                 ->withScheduleToStartTimeout(CarbonInterval::hours(1))
                 ->withStartToCloseTimeout(CarbonInterval::seconds(10))
 //                ->withHeartbeatTimeout(CarbonInterval::seconds(5))
@@ -35,5 +35,10 @@ class FetchWorkflow implements FetchWorkflowInterface
     public function fetch(string $userUuid): \Generator
     {
         return yield $this->fetchActivity->fetch($userUuid);
+    }
+
+    public function getInfo(): Workflow\WorkflowInfo
+    {
+        return Workflow::getInfo();
     }
 }
